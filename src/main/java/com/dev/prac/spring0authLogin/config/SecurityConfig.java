@@ -40,15 +40,17 @@ public class SecurityConfig {
                 .headers((header) ->
                         header.frameOptions(frameOptionsConfig -> frameOptionsConfig.disable()))
                 .formLogin((formLogin) -> formLogin
-                        .loginPage("/login")// 로그인 form 요청 주소
-                        .loginProcessingUrl("/member/login")
-                        .defaultSuccessUrl("/index"))
+                        .loginPage("/login"))// 로그인 form 요청 주소(GET)
+//                        .loginProcessingUrl("/member/login")
+//                        .defaultSuccessUrl("/index"))
                 // 자동 로그인 쿠키
                 .rememberMe((remember) -> remember
                         .key("12345678")
                         .tokenRepository(persistentTokenRepository())
                         .userDetailsService(userDetailsService)
-                        .tokenValiditySeconds(60*60*24*30));
+                        .tokenValiditySeconds(60*60*24*30))
+                //OAuth2 Client
+                .oauth2Login((oauth2) -> oauth2.loginPage("/login"));
 
         return http.build();
     }

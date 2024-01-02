@@ -23,6 +23,12 @@ public class MemberController {
         return "/member/join";
     }
 
+/** void 일 때 뷰 리졸버에 의해서 method 요청경로로 view name 찾아서 응답(/member/join)
+    @GetMapping("/member/join")
+    public void join() {
+        log.info("join get--------------------------");
+    }*/
+
     @PostMapping("/join")
     public String join(MemberJoinDTO memberJoinDTO, RedirectAttributes redirectAttributes)  {
         log.info("join post-----------------");
@@ -55,7 +61,6 @@ public class MemberController {
         if (logout != null) {
             log.info("user logout...................");
         }
-
         return "/member/login";
     }
 
