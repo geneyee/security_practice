@@ -1,6 +1,7 @@
 package com.dev.prac.spring0authLogin.config;
 
 import com.dev.prac.spring0authLogin.security.CustomUserDetailsService;
+import com.dev.prac.spring0authLogin.security.handler.Custom403Handler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -15,6 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
@@ -49,8 +51,10 @@ public class SecurityConfig {
                         .tokenRepository(persistentTokenRepository())
                         .userDetailsService(userDetailsService)
                         .tokenValiditySeconds(60*60*24*30))
-                //OAuth2 Client
-                .oauth2Login((oauth2) -> oauth2.loginPage("/login"));
+                // OAuth2 Client
+                .oauth2Login((oauth2) -> oauth2.loginPage("/login"))
+                // 403exception
+                .exceptionHandling((exceptionHandling) -> exceptionHandling.accessDeniedHandler(accessDeniedHandler()));
 
         return http.build();
     }
@@ -72,6 +76,11 @@ public class SecurityConfig {
         JdbcTokenRepositoryImpl repo = new JdbcTokenRepositoryImpl();
         repo.setDataSource(dataSource);
         return repo;
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return new Custom403Handler();
     }
 
 }
